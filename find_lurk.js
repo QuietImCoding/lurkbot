@@ -4,11 +4,17 @@
 // so bad you need to run it twice ( its a feature not a bug! [its a bug] ) 
 
 // set your own twitter url
-var self_url = 'https://twitter.com/?????'; // better change this 
+var self_handle = '@?????????'; // better change this 
 
 // attempts to count up user messages lmao
 var updateUsers = function( outset ) {
-    Array.from(document.querySelectorAll('a')).filter(x => x.style.width == '40px').forEach(function(x) {if (outset[x.href] == undefined) { outset[x.href] = 1; } else { outset[x.href] += 1 }});
+    Array.from(document.querySelectorAll('a'))
+	.filter(x => x.style.width == '40px')
+	.forEach(function(x) {
+	    var handle = x.href.replace('https://twitter.com/', '@');
+	    if (outset[handle] == undefined) { outset[handle] = 1; }
+	    else { outset[handle] += 1 }
+	});
 }
 
 // used to PRE-CACHE the chat participants for future reference
@@ -24,7 +30,7 @@ var get_participants = async function() {
 	    // after the page loads a bit, scroll to bottom and save all the urls
 	    var scrollbox = document.querySelector('section.css-1dbjc4n:nth-child(2) > div:nth-child(2) > div:nth-child(1)')
 	    scrollbox.scrollTo(0,1e5)
-	    resolve(Array.from(document.querySelectorAll('a')).filter(x => x.style.height == '48px').map(x => x.href));
+	    resolve(Array.from(document.querySelectorAll('a')).filter(x => x.style.height == '48px').map(x => x.href.replace('https://twitter.com/', '@')));
 	    back_btn.click();
 	    back_btn.click();
 	}, 1000);
@@ -34,13 +40,13 @@ var get_participants = async function() {
 
 // pre-calculate participants
 var parts = await get_participants();
+var userset = new Object();
 // after we get back here, give a second to load thingies
 setTimeout( function() {
     // get top bar to shove a button in 
     var chatname = document.getElementById("detail-header").firstChild.innerText;
     var scrollbox = document.querySelector('.r-ouzzow')
     var chlen = function() {scrollbox.scrollTo(0,1);}
-    var userset = new Object();
     // scroll up to update users every 1/10th of a second... computer go zoom
     var scrapetimer = setInterval(function() { updateUsers( userset ) }, 100);
     var btn = document.createElement('button');
@@ -48,8 +54,8 @@ setTimeout( function() {
     // make button do things
     btn.addEventListener("click", x => {
 	// i have infinite interaction and u cannot prove me wrong 
-	userset[self_url] = Infinity;
-	parts.push(self_url);
+	userset[self_handle] = Infinity;
+	parts.push(self_handle);
 	var lurkers = parts.filter(x => !Object.keys(userset).includes(x) );
 	// sort to get a leaderboard mwahahahah
 	var res_str = Object.entries(userset).sort().sort(([,a],[,b]) => a-b).reverse().reduce((a,b) => a + '\n' + b);
