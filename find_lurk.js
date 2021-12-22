@@ -8,10 +8,12 @@ var self_handle = '@?????????'; // better change this
 
 // attempts to count up user messages lmao
 var updateUsers = function( outset ) {
-    Array.from(document.querySelectorAll('a'))
-	.filter(x => x.style.width == '40px')
+    var scrollbox = document.querySelector('.r-ouzzow');
+    Array.from(scrollbox.querySelectorAll('div.css-1dbjc4n.r-sdzlij.r-ggadg3.r-1udh08x.r-u8s1d.r-8jfcpp'))
+	.map(x =>  x.firstChild.href )
+	.filter(x => x != undefined)
 	.forEach(function(x) {
-	    var handle = x.href.replace('https://twitter.com/', '@');
+	    var handle = x.replace('https://twitter.com/', '@');
 	    if (outset[handle] == undefined) { outset[handle] = 1; }
 	    else { outset[handle] += 1 }
 	});
@@ -24,13 +26,14 @@ var get_participants = async function() {
     info_btn[0].click();
     var part_btn = Array.from(document.querySelectorAll('a')).filter(x => x.href.includes('/participants'));
     part_btn[0].click();
-    var back_btn = document.querySelector('div.r-2yi16');
     var promise = new Promise(function(resolve, reject) {
 	setTimeout( function() {
 	    // after the page loads a bit, scroll to bottom and save all the urls
-	    var scrollbox = document.querySelector('section.css-1dbjc4n:nth-child(2) > div:nth-child(2) > div:nth-child(1)')
+	    var scrollbox = document.querySelector('section.css-1dbjc4n:nth-child(2) > div:nth-child(1) > div:nth-child(1)');
 	    scrollbox.scrollTo(0,1e5)
-	    resolve(Array.from(document.querySelectorAll('a')).filter(x => x.style.height == '48px').map(x => x.href.replace('https://twitter.com/', '@')));
+	    resolve(Array.from(scrollbox.querySelectorAll('div.css-1dbjc4n.r-1wbh5a2.r-dnmrzs'))
+		    .map(x =>  x.firstChild.href ).filter(x => x != undefined).map(x => x.replace('https://twitter.com/', '@')));
+	    var back_btn = document.querySelector('div.r-2yi16');
 	    back_btn.click();
 	    back_btn.click();
 	}, 1000);
