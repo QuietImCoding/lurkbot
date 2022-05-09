@@ -9,7 +9,7 @@ var self_handle = '@?????????'; // better change this
 // attempts to count up user messages lmao
 var updateUsers = function( outset ) {
     var scrollbox = document.querySelector('.r-ouzzow');
-    Array.from(scrollbox.querySelectorAll('div.css-1dbjc4n.r-sdzlij.r-ggadg3.r-1udh08x.r-u8s1d.r-8jfcpp'))
+    Array.from(scrollbox.querySelectorAll('.css-1dbjc4n.r-ggadg3.r-u8s1d.r-8jfcpp'))
 	.map(x =>  x.firstChild.href )
 	.filter(x => x != undefined)
 	.forEach(function(x) {
@@ -43,6 +43,7 @@ var get_participants = async function() {
 
 // pre-calculate participants
 var parts = await get_participants();
+parts = Array.from(new Set(parts));
 var userset = new Object();
 // after we get back here, give a second to load thingies
 setTimeout( function() {
@@ -66,7 +67,7 @@ setTimeout( function() {
 	var lurk_str = ""; lurkers.forEach(x => lurk_str += x + '\n')
 	var outstr = "Lurkers:\n\n" + lurk_str + '\n\nLeaderboard:\n\n' + res_str;
 	// alerting is good, actually
-	alert(outstr);
+	console.log(outstr);
     });
     document.getElementById("detail-header").appendChild(btn)
     // we scroll up every 500 millisecond... don't ask why i picked these numbers 
